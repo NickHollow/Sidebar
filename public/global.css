@@ -1,0 +1,45 @@
+* {
+	margin: 0px;
+	padding: 0px;
+}
+html, body {
+	height: 100%;
+}
+.active {
+	color: lightblue;
+}
+.normal {
+	color: #D8E1E8;
+}
+.shown {
+	display: block;
+}
+.hidden {
+	display: none;
+}
+.scanex-sidebar .tabs > * {
+	padding: 15px;
+	cursor: pointer;
+}
+.scanex-sidebar .panes > * {
+	padding: 5px;
+	width: 300px;
+}
+.scanex-sidebar,
+.scanex-sidebar {	
+	font-family: sans-serif;
+	font-size: 12px;	
+}
+.scanex-sidebar .tabs {
+	background-color: #4C5567;
+}
+.scanex-sidebar .tabs *:hover {
+	background-color: darkgrey;
+}
+.leaflet-left {
+	height: 100%;
+}
+.leaflet-left .leaflet-control {
+	margin: 0px;
+	height: 100%;
+}
