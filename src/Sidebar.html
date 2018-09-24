@@ -1,21 +1,21 @@
 <div ref:container class="scanex-sidebar">
-    <ul ref:tabs class="tabs">
+    <div ref:tabs class="tabs">
         {#each tabs as t, i}
-            <li on:click="toggle(active, visible, i)">
+            <div on:click="toggle(active, visible, i)">
                 <i class="{active === i ? t.active : t.normal}"></i>
-            </li>
+            </div>
         {/each}
-    </ul>
-    <ul ref:panes class="panes">
+    </div>
+    <div ref:panes class="panes">
         {#each tabs as t, i}
-            <li class="{visible && active === i ? 'shown' : 'hidden'}">{content}</li>
+            <div class="{visible && active === i ? 'shown' : 'hidden'}">{content}</div>
         {/each}
-    </ul>
+    </div>
 </div>
 
 <style>
     .scanex-sidebar {
-        display: inline-block;
+        display: flex;
         vertical-align: top;
         height: inherit;
     }
@@ -24,8 +24,8 @@
         vertical-align: top;
         display: inline-block;
         height: inherit;
-    }
-    .scanex-sidebar .tabs li {
+    }    
+    .scanex-sidebar .tabs div {
         text-align: center;
         cursor: pointer;       
     }    
@@ -58,7 +58,7 @@
                 }
                 return panes;
             },
-            addPane ({active, normal, content}) {
+            addTab ({active, normal, content}) {
 
             }
         }

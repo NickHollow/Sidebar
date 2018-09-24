@@ -1,4 +1,4 @@
-import Sidebar from './Sidebar.html';
+import Sidebar from './src/Sidebar.html';
 
 let map = L.map(document.body, {zoomControl: false}).setView([54.04, 26.27], 5);
 L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png').addTo(map);
@@ -58,4 +58,5 @@ let SidebarControl = L.Control.extend({
         return this;
     },    
 });
+
 let ctl = new SidebarControl({position: 'topleft'}).addTo(map);
