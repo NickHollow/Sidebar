@@ -12,7 +12,7 @@ let SidebarControl = L.Control.extend({
 
     onAdd: function(map) {
 		this._container = L.DomUtil.create('div');
-		this._sidebar = new Sidebar(this._container);
+		this._sidebar = new Sidebar(this._container, {position: 'left'});
 
 		const tabs = [
 			{id: 'layers', icon: 'fas fa-layer-group', active: 'active', normal: 'normal', content: 'Layers'},

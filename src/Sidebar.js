@@ -2,13 +2,13 @@ import EventTarget from 'scanex-event-target';
 import './Sidebar.css';
 
 class Sidebar extends EventTarget {
-    constructor (container) {
+    constructor (container, {position = 'left'} = {}) {
         super();
         this._container = container;
         this._container.classList.add ('noselect');    
         this._container.innerHTML = `<div class="scanex-sidebar">
-            <div class="tabs"></div>
-            <div class="panes"></div>
+            <div class="${position === 'left' ? 'tabs' : 'panes'}"></div>
+            <div class="${position === 'left' ? 'panes' : 'tabs'}"></div>
         </div>`;
 
         this._tabContainer = this._container.querySelector('.tabs');
