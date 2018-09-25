@@ -21,3 +21,9 @@
     text-align: center;
     cursor: pointer;       
 }
+.scanex-sidebar .shown {
+	display: block;
+}
+.scanex-sidebar .hidden {
+	display: none;
+}

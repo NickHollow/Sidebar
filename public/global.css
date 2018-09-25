@@ -12,12 +12,6 @@ html, body {
 .normal {
 	color: #d8e1e8;
 }
-.shown {
-	display: block;
-}
-.hidden {
-	display: none;
-}
 .scanex-sidebar .tabs div {
 	padding: 15px;
 	cursor: pointer;
