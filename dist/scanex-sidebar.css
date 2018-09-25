@@ -1,0 +1,23 @@
+.noselect {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+.scanex-sidebar {
+    display: flex;
+    vertical-align: top;
+    height: inherit;
+}
+.scanex-sidebar .tabs,
+.scanex-sidebar .panes {        
+    vertical-align: top;
+    display: inline-block;
+    height: inherit;
+}    
+.scanex-sidebar .tabs div {
+    text-align: center;
+    cursor: pointer;       
+}

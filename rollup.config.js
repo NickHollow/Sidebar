@@ -1,40 +1,25 @@
-import svelte from 'rollup-plugin-svelte';
+import babel from 'rollup-plugin-babel';
 import resolve from 'rollup-plugin-node-resolve';
 import commonjs from 'rollup-plugin-commonjs';
-import { terser } from 'rollup-plugin-terser';
+import css from 'rollup-plugin-css-porter';
 import pkg from './package.json';
+import { terser } from 'rollup-plugin-terser';
+
 
 const production = !process.env.ROLLUP_WATCH;
 
 export default [
 	{
-		input: 'src/Sidebar.html',
+		input: 'src/Sidebar.js',
 		output: {
 			format: 'cjs',
 			file: pkg.module,
 		},
-		plugins: [
-			svelte({
-				// opt in to v3 behaviour today
-				skipIntroByDefault: true,
-				nestedTransitions: true,
-	
-				// enable run-time checks when not in production
-				dev: !production,
-				// we'll extract any component CSS out into
-				// a separate file — better for performance
-				css: css => {
-					css.write('dist/scanex-svelte-sidebar.css');
-				}
-			}),
-	
-			// If you have external dependencies installed from
-			// npm, you'll most likely need these plugins. In
-			// some cases you'll need additional configuration —
-			// consult the documentation for details:
-			// https://github.com/rollup/rollup-plugin-commonjs
-			resolve(),
-			commonjs(),					
+		plugins: [							
+			resolve({ jsnext: true, main: true, module: false, browser: false }),
+			commonjs(),
+			css({minified: false, dest: 'dist/scanex-sidebar.css'}),			
+			babel(),
 		]
 	},
 	{
@@ -42,35 +27,15 @@ export default [
 		output: {
 			sourcemap: true,
 			format: 'iife',
-			name: 'app',
+			name: 'sidebarControl',
 			file: pkg.browser,
 		},
-		plugins: [
-			svelte({
-				// opt in to v3 behaviour today
-				skipIntroByDefault: true,
-				nestedTransitions: true,
-
-				// enable run-time checks when not in production
-				dev: !production,
-				// we'll extract any component CSS out into
-				// a separate file — better for performance
-				css: css => {
-					css.write('public/scanex-svelte-sidebar.css');
-				}
-			}),
-
-			// If you have external dependencies installed from
-			// npm, you'll most likely need these plugins. In
-			// some cases you'll need additional configuration —
-			// consult the documentation for details:
-			// https://github.com/rollup/rollup-plugin-commonjs
-			resolve(),
+		plugins: [			
+			resolve({ jsnext: true, main: true, module: false, browser: false }),
 			commonjs(),
-
-			// If we're building for production (npm run build
-			// instead of npm run dev), minify
-			production && terser()
+			css({minified: false, dest: 'public/scanex-sidebar.css'}),
+			babel(),
+			production && terser(),
 		]
 	}
 ];
