@@ -152,20 +152,26 @@ class Sidebar extends EventTarget {
         event.initEvent('change', false, false);
         this.dispatchEvent(event);
     }
-    addTab({ id, icon, opened, closed, enabled = true }) {
+    addTab({ id, icon, opened, closed, tooltip, enabled = true }) {
         let tab = document.createElement('div');
         let ic = document.createElement('i');
         icon.split(/\s+/g).forEach(x => ic.classList.add(x));
         ic.classList.add(id === this._current ? opened : closed);
         tab.appendChild(ic);
         tab.setAttribute('data-tab-id', id);
+        if (tooltip) {
+            tab.setAttribute('title', tooltip);
+        }
         tab.addEventListener('click', this._toggle.bind(this, id));
         this._tabContainer.appendChild(tab);
-        this._data[id] = { icon, opened, closed, enabled };
+
         let pane = document.createElement('div');
         pane.setAttribute('data-pane-id', id);
         pane.classList.add(this.visible && this.current === id ? 'shown' : 'hidden');
         this._paneContainer.appendChild(pane);
+
+        this._data[id] = { icon, opened, closed, enabled };
+
         return pane;
     }
     removeTab(id) {
