@@ -26,16 +26,14 @@ class Sidebar extends EventTarget {
     }    
     addTab({id, icon, active, normal}) {        
         let tab = document.createElement('div');
-        let ic = document.createElement('i');
-        icon.split(/\s+/g).forEach(c => {
-            ic.classList.add (c); 
-        });       
-        ic.classList.add (id === this.active ? active : normal);
+        let ic = document.createElement('i');        
+        icon.split (/\s+/g).forEach (x => ic.classList.add(x));    
+        ic.classList.add (id === this._active ? active : normal);
         tab.appendChild (ic);
         tab.setAttribute ('data-tab-id', id);
         tab.addEventListener ('click', this._toggle.bind(this, id));
         this._tabContainer.appendChild (tab);
-        this._tabs.push({id, active, normal});
+        this._tabs.push({id, icon, active, normal});
         let pane = document.createElement('div');
         pane.setAttribute ('data-pane-id', id);
         pane.classList.add (this.visible && this.active === id ? 'shown' : 'hidden');
@@ -56,7 +54,7 @@ class Sidebar extends EventTarget {
                 break;
             }         
         }
-    }
+    }    
     _toggle (current) {
         const tabs = this._tabContainer.children;
         const panes = this._paneContainer.children;
@@ -71,14 +69,14 @@ class Sidebar extends EventTarget {
                         tab.classList.remove (normal);
                         tab.classList.add (active);
                     }
-                    else {
+                    else {                        
                         tab.classList.remove (active);
                         tab.classList.add (normal);
-                    }                    
+                    }
                     pane.classList.remove('hidden');
                     pane.classList.add('shown');
                 }
-                else {
+                else {                    
                     tab.classList.remove (active);
                     tab.classList.add (normal);
                     pane.classList.remove('shown');
@@ -96,17 +94,17 @@ class Sidebar extends EventTarget {
                 let tab = tabs[i].querySelector('i');
                 let pane = panes[i];
                 if (id === current) {
-                    tab.classList.remove (normal);
                     tab.classList.add (active);
+                    tab.classList.remove (normal);                  
                     pane.classList.remove('hidden');
                     pane.classList.add('shown');
                 }
-                else {
+                else { 
                     tab.classList.remove (active);
                     tab.classList.add (normal);
                     pane.classList.remove('shown');
                     pane.classList.add('hidden');
-                }                
+                }
             }
             this._active = current;
             this._visible = true;
