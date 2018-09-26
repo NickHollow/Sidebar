@@ -6,10 +6,10 @@
 html, body {
 	height: 100%;
 }
-.active {
+.opened {
 	color: #3ca1d0;
 }
-.normal {
+.closed {
 	color: #d8e1e8;
 }
 .scanex-sidebar .tabs div {

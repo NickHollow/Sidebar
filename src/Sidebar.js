@@ -14,53 +14,73 @@ class Sidebar extends EventTarget {
         this._tabContainer = this._container.querySelector('.tabs');
         this._paneContainer = this._container.querySelector('.panes');
 
-        this._active = null;     
-        this._tabs = [];
-    }    
-    get active () {
-        return this._active;
+        this._current = null;
+        this._data = {};
     }
-    set active (current) { 
-        const tabs = this._tabContainer.children;
-        const panes = this._paneContainer.children;       
-        for (let i = 0; i < tabs.length; ++i) {
-            const {id, active, normal} = this._tabs[i];
-            let tab = tabs[i].querySelector('i');
-            let pane = panes[i];
-            if (id === current) {
-                tab.classList.remove (normal);
-                tab.classList.add (active);
-                                
-                pane.classList.remove('hidden');
-                pane.classList.add('shown');
-            }
-            else { 
-                tab.classList.remove (active);
-                tab.classList.add (normal);
-
-                pane.classList.remove('shown');
-                pane.classList.add('hidden');
-            }
+    enable (id) {
+        if (this._data[id]) {
+            this._data[id].enabled = true;
         }
-        this._active = current;            
-        let event = document.createEvent('Event');
-        event.detail = {active: current};
+    }
+    enabled (id) {
+        const {enabled} = id && this._data[id] ? this._data[id] : {enabled: false};
+        return enabled;
+    }
+    disable (id) {
+        if (this._data[id]) {
+            this._data[id].enabled = false;
+        }     
+    }
+    get current () {
+        return this._current;
+    }
+    set current (current) { 
+        const tabs = this._tabContainer.children;
+        const panes = this._paneContainer.children;
+        let success = false;
+        for (let i = 0; i < tabs.length; ++i) {            
+            const id = tabs[i].getAttribute('data-tab-id');
+            const {opened, closed, enabled} = this._data[id];
+            if (enabled) {                
+                let tab = tabs[i].querySelector('i');
+                let pane = panes[i];
+                if (id === current) {
+                    tab.classList.remove (closed);
+                    tab.classList.add (opened);
+                                    
+                    pane.classList.remove('hidden');
+                    pane.classList.add('shown');
+                    
+                    success = true;
+                }
+                else { 
+                    tab.classList.remove (opened);
+                    tab.classList.add (closed);
+
+                    pane.classList.remove('shown');
+                    pane.classList.add('hidden');
+                }                
+            }        
+        } 
+        this._current = success ? current : null;
+        let event = document.createEvent('Event');        
+        event.detail = {current: this._current};
         event.initEvent('change', false, false);
         this.dispatchEvent(event);
     } 
-    addTab({id, icon, active, normal}) {        
+    addTab({id, icon, opened, closed, enabled = true}) { 
         let tab = document.createElement('div');
         let ic = document.createElement('i');        
         icon.split (/\s+/g).forEach (x => ic.classList.add(x));    
-        ic.classList.add (id === this._active ? active : normal);
+        ic.classList.add (id === this._current ? opened : closed);
         tab.appendChild (ic);
         tab.setAttribute ('data-tab-id', id);
         tab.addEventListener ('click', this._toggle.bind(this, id));
         this._tabContainer.appendChild (tab);
-        this._tabs.push({id, icon, active, normal});
+        this._data[id] = {icon, opened, closed, enabled};
         let pane = document.createElement('div');
         pane.setAttribute ('data-pane-id', id);
-        pane.classList.add (this.visible && this.active === id ? 'shown' : 'hidden');
+        pane.classList.add (this.visible && this.current === id ? 'shown' : 'hidden');
         this._paneContainer.appendChild (pane);
         return pane;
     }
@@ -72,15 +92,15 @@ class Sidebar extends EventTarget {
         const pane = this._paneContainer.querySelector(`[data-pane-id=${id}]`);
         this._paneContainer.removeChild(pane);
 
-        for (let i = 0; i < this._tabs.length; ++i) {
-            if (this._tabs[i].id === id) {
-                this._tabs.splice(i, 1);
+        for (let i = 0; i < this._data.length; ++i) {
+            if (this._data[i].id === id) {
+                this._data.splice(i, 1);
                 break;
             }         
         }
     }    
     _toggle (current) {        
-        this.active = this.active === current ? null : current;
+        this.current = this.current === current ? null : current;
     }
 }
 

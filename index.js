@@ -15,14 +15,14 @@ let SidebarControl = L.Control.extend({
 		this._sidebar = new Sidebar(this._container, {position: 'left'});
 
 		const tabs = [
-			{id: 'layers', icon: 'fas fa-layer-group', active: 'active', normal: 'normal', content: 'Layers'},
-			{id: 'weather', icon: 'fas fa-bolt', active: 'active', normal: 'normal', content: 'Weather'},
-			{id: 'services', icon: 'fas fa-cogs', active: 'active', normal: 'normal', content: 'Services'},
+			{id: 'layers', icon: 'fas fa-layer-group', opened: 'opened', closed: 'closed', content: 'Layers'},
+			{id: 'weather', icon: 'fas fa-bolt', opened: 'opened', closed: 'closed', content: 'Weather'},
+			{id: 'services', icon: 'fas fa-cogs', opened: 'opened', closed: 'closed', content: 'Services', enabled: false},
 		];
 				
 		for (let i = 0; i < tabs.length; ++i) {
-            const {id, icon, active, normal, content} = tabs[i];
-            let p = this._sidebar.addTab({id, icon, active, normal});
+            const {id, icon, opened, closed, content, enabled} = tabs[i];
+            let p = this._sidebar.addTab({id, icon, opened, closed, enabled});
 			p.innerHTML = `<span>${content}</span>`;
         }
 
