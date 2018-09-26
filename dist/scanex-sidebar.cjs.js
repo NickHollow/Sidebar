@@ -100,14 +100,37 @@ class Sidebar extends EventTarget {
         this._paneContainer = this._container.querySelector('.panes');
 
         this._active = null;
-        this._visible = false;
         this._tabs = [];
-    }
-    get visible() {
-        return this._visible;
     }
     get active() {
         return this._active;
+    }
+    set active(current) {
+        const tabs = this._tabContainer.children;
+        const panes = this._paneContainer.children;
+        for (let i = 0; i < tabs.length; ++i) {
+            const { id, active, normal } = this._tabs[i];
+            let tab = tabs[i].querySelector('i');
+            let pane = panes[i];
+            if (id === current) {
+                tab.classList.remove(normal);
+                tab.classList.add(active);
+
+                pane.classList.remove('hidden');
+                pane.classList.add('shown');
+            } else {
+                tab.classList.remove(active);
+                tab.classList.add(normal);
+
+                pane.classList.remove('shown');
+                pane.classList.add('hidden');
+            }
+        }
+        this._active = current;
+        let event = document.createEvent('Event');
+        event.detail = { active: current };
+        event.initEvent('change', false, false);
+        this.dispatchEvent(event);
     }
     addTab({ id, icon, active, normal }) {
         let tab = document.createElement('div');
@@ -141,60 +164,7 @@ class Sidebar extends EventTarget {
         }
     }
     _toggle(current) {
-        const tabs = this._tabContainer.children;
-        const panes = this._paneContainer.children;
-        if (this.active === current) {
-            const show = !this.visible;
-            for (let i = 0; i < tabs.length; ++i) {
-                const { id, active, normal } = this._tabs[i];
-                let tab = tabs[i].querySelector('i');
-                let pane = panes[i];
-                if (show) {
-                    if (id === current) {
-                        tab.classList.remove(normal);
-                        tab.classList.add(active);
-                    } else {
-                        tab.classList.remove(active);
-                        tab.classList.add(normal);
-                    }
-                    pane.classList.remove('hidden');
-                    pane.classList.add('shown');
-                } else {
-                    tab.classList.remove(active);
-                    tab.classList.add(normal);
-                    pane.classList.remove('shown');
-                    pane.classList.add('hidden');
-                }
-            }
-            if (!show) {
-                this._active = null;
-            }
-            this._visible = show;
-        } else {
-            for (let i = 0; i < tabs.length; ++i) {
-                const { id, active, normal } = this._tabs[i];
-                let tab = tabs[i].querySelector('i');
-                let pane = panes[i];
-                if (id === current) {
-                    tab.classList.add(active);
-                    tab.classList.remove(normal);
-                    pane.classList.remove('hidden');
-                    pane.classList.add('shown');
-                } else {
-                    tab.classList.remove(active);
-                    tab.classList.add(normal);
-                    pane.classList.remove('shown');
-                    pane.classList.add('hidden');
-                }
-            }
-            this._active = current;
-            this._visible = true;
-        }
-
-        let event = document.createEvent('Event');
-        event.detail = { active: current, visible: this.visible };
-        event.initEvent('change', false, false);
-        this.dispatchEvent(event);
+        this.active = this.active === current ? null : current;
     }
 }
 
