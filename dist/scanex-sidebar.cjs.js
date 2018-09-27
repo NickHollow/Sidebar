@@ -190,7 +190,9 @@ class Sidebar extends EventTarget {
         }
     }
     _toggle(current) {
-        this.current = this.current === current ? null : current;
+        if (this.enabled(current)) {
+            this.current = this.current === current ? null : current;
+        }
     }
 }
 
