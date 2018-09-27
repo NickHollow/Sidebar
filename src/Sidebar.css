@@ -8,8 +8,7 @@
 }
 .scanex-sidebar {
     display: flex;
-    vertical-align: top;
-    height: inherit;
+    vertical-align: top;    
 }
 .scanex-sidebar .tabs,
 .scanex-sidebar .panes {        

@@ -8,14 +8,12 @@
 }
 .scanex-sidebar {
     display: flex;
-    vertical-align: top;
-    height: inherit;
+    vertical-align: top;    
 }
 .scanex-sidebar .tabs,
 .scanex-sidebar .panes {        
     vertical-align: top;
-    display: inline-block;
-    height: inherit;
+    display: inline-block;    
 }    
 .scanex-sidebar .tabs div {
     text-align: center;
