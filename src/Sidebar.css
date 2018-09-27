@@ -14,8 +14,7 @@
 .scanex-sidebar .tabs,
 .scanex-sidebar .panes {        
     vertical-align: top;
-    display: inline-block;
-    height: inherit;
+    display: inline-block;    
 }    
 .scanex-sidebar .tabs div {
     text-align: center;
