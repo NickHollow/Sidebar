@@ -196,6 +196,9 @@ class Sidebar extends EventTarget {
             this.current = this.current === current ? null : current;
         }
     }
+    getPane(id) {
+        return this._paneContainer.querySelector(`[data-pane-id=${id}]`);
+    }
 }
 
 module.exports = Sidebar;
