@@ -27,46 +27,48 @@ class Sidebar extends EventTarget {
         return enabled;
     }
     disable (id) {
-        if (this._data[id]) {
+        if (this._data[id]) {            
+            if (id === this.current) {                
+                this.current = null;
+            }
             this._data[id].enabled = false;
         }     
     }
     get current () {
         return this._current;
     }
-    set current (current) { 
+    set current (current) {         
         const tabs = this._tabContainer.children;
         const panes = this._paneContainer.children;
         let success = false;
+
         for (let i = 0; i < tabs.length; ++i) {            
             const id = tabs[i].getAttribute('data-tab-id');
             const {opened, closed, enabled} = this._data[id];
-            if (enabled) {                
-                let tab = tabs[i].querySelector('i');
-                let pane = panes[i];
-                if (id === current) {
-                    tab.classList.remove (closed);
-                    tab.classList.add (opened);
-                                    
-                    pane.classList.remove('hidden');
-                    pane.classList.add('shown');
+            let tab = tabs[i].querySelector('i');
+            let pane = panes[i];
+            if (id === current) {
+                tab.classList.remove (closed);
+                tab.classList.add (opened);
+                                
+                pane.classList.remove('hidden');
+                pane.classList.add('shown');
 
-                    success = true;
-                }
-                else { 
-                    tab.classList.remove (opened);
-                    tab.classList.add (closed);
+                success = true;
+            }
+            else { 
+                tab.classList.remove (opened);
+                tab.classList.add (closed);
 
-                    pane.classList.remove('shown');
-                    pane.classList.add('hidden');
-                }                
-            }        
+                pane.classList.remove('shown');
+                pane.classList.add('hidden');
+            }
         } 
         this._current = success ? current : null;
         let event = document.createEvent('Event');        
         event.detail = {current: this._current};
         event.initEvent('change', false, false);
-        this.dispatchEvent(event);
+        this.dispatchEvent(event);        
     } 
     addTab({id, icon, opened, closed, tooltip, enabled = true}) { 
         let tab = document.createElement('div');

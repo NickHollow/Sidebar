@@ -33,10 +33,14 @@ html, body {
 .scanex-sidebar .tabs *:hover {
 	background-color: darkgrey;
 }
-.leaflet-left {
+.leaflet-left .leaflet-control {
+    margin-left: 0px;
+}
+.leaflet-top .leaflet-control {
+	margin-top: 0px;
 	height: 100%;
 }
-.leaflet-left .leaflet-control {
-	margin: 0px;
+.leaflet-top,
+.leaflet-top .scanex-sidebar {
 	height: 100%;
 }
