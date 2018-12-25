@@ -5,7 +5,6 @@ class Sidebar extends EventTarget {
     constructor (container, {position = 'left'} = {}) {
         super();
         this._container = container;
-        this._container.classList.add ('noselect');    
         this._container.innerHTML = `<div class="scanex-sidebar">
             <div class="${position === 'left' ? 'tabs' : 'panes'}"></div>
             <div class="${position === 'left' ? 'panes' : 'tabs'}"></div>
