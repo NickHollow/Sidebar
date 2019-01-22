@@ -5,7 +5,6 @@ import css from 'rollup-plugin-css-porter';
 import pkg from './package.json';
 import { terser } from 'rollup-plugin-terser';
 
-
 const production = !process.env.ROLLUP_WATCH;
 
 export default [
@@ -16,7 +15,7 @@ export default [
 			file: pkg.module,
 		},
 		plugins: [							
-			resolve({ jsnext: true, main: true, module: false, browser: false }),
+			resolve({ jsnext: true, main: true, module: false }),
 			commonjs(),
 			css({minified: false, dest: 'dist/scanex-sidebar.css'}),			
 			babel(),
@@ -31,7 +30,7 @@ export default [
 			file: pkg.browser,
 		},
 		plugins: [			
-			resolve({ jsnext: true, main: true, module: false, browser: false }),
+			resolve({ jsnext: true, main: true, module: false }),
 			commonjs(),
 			css({minified: false, dest: 'public/scanex-sidebar.css'}),
 			babel(),
