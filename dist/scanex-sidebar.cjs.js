@@ -138,6 +138,8 @@ var Sidebar = function (_EventTarget) {
         value: function enable(id) {
             if (this._data[id]) {
                 this._data[id].enabled = true;
+                var tab = this._tabContainer.querySelector('[data-tab-id=' + id + ']');
+                tab.classList.remove('tab-disabled');
             }
         }
     }, {
@@ -156,6 +158,8 @@ var Sidebar = function (_EventTarget) {
                     this.current = null;
                 }
                 this._data[id].enabled = false;
+                var tab = this._tabContainer.querySelector('[data-tab-id=' + id + ']');
+                tab.classList.add('tab-disabled');
             }
         }
     }, {
@@ -177,6 +181,9 @@ var Sidebar = function (_EventTarget) {
             ic.classList.add(id === this._current ? opened : closed);
             tab.appendChild(ic);
             tab.setAttribute('data-tab-id', id);
+            if (!enabled) {
+                tab.classList.add('tab-disabled');
+            }
             if (tooltip) {
                 tab.setAttribute('title', tooltip);
             }

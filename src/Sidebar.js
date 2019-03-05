@@ -19,6 +19,8 @@ class Sidebar extends EventTarget {
     enable (id) {
         if (this._data[id]) {
             this._data[id].enabled = true;
+            let tab = this._tabContainer.querySelector(`[data-tab-id=${id}]`);
+            tab.classList.remove ('tab-disabled');
         }
     }
     enabled (id) {
@@ -31,6 +33,8 @@ class Sidebar extends EventTarget {
                 this.current = null;
             }
             this._data[id].enabled = false;
+            let tab = this._tabContainer.querySelector(`[data-tab-id=${id}]`);
+            tab.classList.add ('tab-disabled');
         }     
     }
     get current () {
@@ -76,6 +80,9 @@ class Sidebar extends EventTarget {
         ic.classList.add (id === this._current ? opened : closed);
         tab.appendChild (ic);
         tab.setAttribute ('data-tab-id', id);
+        if (!enabled) {
+            tab.classList.add('tab-disabled');
+        }
         if (tooltip) {
             tab.setAttribute ('title', tooltip);
         }
