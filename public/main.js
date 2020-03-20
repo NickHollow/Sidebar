@@ -10197,6 +10197,7 @@
 	        this.visible = !this.visible;
 	      } else {
 	        this.selected = id;
+	        this.visible = true;
 	      }
 	    }
 	  }, {
@@ -10223,34 +10224,44 @@
 
 	      if (!this.selected) {
 	        this.selected = id;
-	        this.visible = false;
 	      }
 
 	      return panel;
 	    }
 	  }, {
 	    key: "removeTab",
-	    value: function removeTab(id) {}
+	    value: function removeTab(id) {
+	      this._tabsContainer.removeChild(this._tabs[id]);
+
+	      delete this._tabs[id];
+
+	      this._panelsContainer.removeChild(this._panels[id]);
+
+	      delete this._panels[id];
+
+	      if (this.selected === id) {
+	        this.visible = false;
+	        var tabs = Object.keys(this._tabs);
+
+	        if (tabs.length) {
+	          this.selected = tabs[0];
+	        }
+	      }
+	    }
 	  }, {
 	    key: "_render",
 	    value: function _render(container) {
-	      this._element = document.createElement('div');
-
-	      this._element.classList.add('scanex-sidebar');
-
+	      container.classList.add('scanex-sidebar');
 	      this._tabsContainer = document.createElement('div');
 
 	      this._tabsContainer.classList.add('tabs');
 
-	      this._element.appendChild(this._tabsContainer);
-
+	      container.appendChild(this._tabsContainer);
 	      this._panelsContainer = document.createElement('div');
 
 	      this._panelsContainer.classList.add('panels');
 
-	      this._element.appendChild(this._panelsContainer);
-
-	      container.appendChild(this._element);
+	      container.appendChild(this._panelsContainer);
 	    }
 	  }, {
 	    key: "visible",
@@ -10289,7 +10300,6 @@
 	          }
 	        });
 	        this._selected = selected;
-	        this.visible = true;
 	        var event = document.createEvent('Event');
 	        event.initEvent('change:selected', false, false);
 	        this.dispatchEvent(event);

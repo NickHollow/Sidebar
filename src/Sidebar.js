@@ -17,7 +17,8 @@ class Sidebar extends EventTarget {
         }
         else {
             this.selected = id;
-        }        
+            this.visible = true;
+        }     
     }
     addTab(id) {
         let tab = document.createElement('div');
@@ -37,12 +38,24 @@ class Sidebar extends EventTarget {
         this._panels[id] = panel;
         
         if(!this.selected) {
-            this.selected = id;
-            this.visible = false;
+            this.selected = id;            
         }
         return panel;
     }
     removeTab(id) {
+        this._tabsContainer.removeChild(this._tabs[id]);
+        delete this._tabs[id];
+
+        this._panelsContainer.removeChild(this._panels[id]);
+        delete this._panels[id];
+
+        if (this.selected === id) {
+            this.visible = false;
+            let tabs = Object.keys(this._tabs);
+            if (tabs.length) {
+                this.selected = tabs[0];                
+            }
+        }        
     }
     get visible () {
         return this._visible;
@@ -74,26 +87,22 @@ class Sidebar extends EventTarget {
                     this._tabs[id].classList.remove('selected');
                 }            
             }); 
-            this._selected = selected;
-            this.visible = true;
+            this._selected = selected;            
             let event = document.createEvent('Event');
             event.initEvent('change:selected', false, false);
             this.dispatchEvent(event);
         }
     }
     _render(container) {
-        this._element = document.createElement('div');
-        this._element.classList.add('scanex-sidebar');
 
+        container.classList.add('scanex-sidebar');
         this._tabsContainer = document.createElement('div');
         this._tabsContainer.classList.add('tabs');
-        this._element.appendChild(this._tabsContainer);
+        container.appendChild(this._tabsContainer);
 
         this._panelsContainer = document.createElement('div');
         this._panelsContainer.classList.add('panels');
-        this._element.appendChild(this._panelsContainer);
-
-        container.appendChild(this._element);
+        container.appendChild(this._panelsContainer);        
     }
 }
 
