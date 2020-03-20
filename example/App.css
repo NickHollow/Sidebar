@@ -1,0 +1,37 @@
+html, body {
+    margin: 0px;
+    padding: 0px;
+}
+#app > * {
+    float: left;
+}
+.scanex-sidebar > *, #map {
+    height: 100vh;
+}
+#map {
+    width: calc(100% - 55px);
+}
+#map.expanded {
+    width: calc(100% - 202px);
+}
+.scanex-sidebar > .tabs {
+    background-color: #4C5567;
+}
+.scanex-sidebar > .tabs > .tab {
+    padding: 15px 15px 15px 12px;
+    border-left: 3px solid transparent;
+}
+.scanex-sidebar > .tabs > .tab.selected {
+    border-left: 3px solid #70cbe0;
+}
+.scanex-sidebar > .panels > .panel {
+    width: 150px;
+}
+.scanex-sidebar .scanex-sidebar-icon {
+    cursor: pointer;
+    display: inline-block;
+    background-position: center;
+    background-repeat: no-repeat;
+    width: 18px;
+    height: 18px;
+}

@@ -1,125 +1,99 @@
-import EventTarget from 'scanex-event-target';
 import './Sidebar.css';
+import EventTarget from 'scanex-event-target';
 
 class Sidebar extends EventTarget {
-    constructor (container, {position = 'left'} = {}) {
+    constructor(container) {
         super();
+        this._tabs = {};
+        this._panels = {};
         this._container = container;
-        this._container.innerHTML = `<div class="scanex-sidebar">
-            <div class="${position === 'left' ? 'tabs' : 'panes'}"></div>
-            <div class="${position === 'left' ? 'panes' : 'tabs'}"></div>
-        </div>`;
-
-        this._tabContainer = this._container.querySelector('.tabs');
-        this._paneContainer = this._container.querySelector('.panes');
-
-        this._current = null;
-        this._data = {};
+        this._render(this._container);
+        this.visible = false;
     }
-    enable (id) {
-        if (this._data[id]) {
-            this._data[id].enabled = true;
-            let tab = this._tabContainer.querySelector(`[data-tab-id=${id}]`);
-            tab.classList.remove ('tab-disabled');
+    _onTabClick(id, e) {
+        e.stopPropagation();
+        if (this.selected === id) {
+            this.visible = !this.visible;
         }
+        else {
+            this.selected = id;
+        }        
     }
-    enabled (id) {
-        const {enabled} = id && this._data[id] ? this._data[id] : {enabled: false};
-        return enabled;
-    }
-    disable (id) {
-        if (this._data[id]) {            
-            if (id === this.current) {                
-                this.current = null;
-            }
-            this._data[id].enabled = false;
-            let tab = this._tabContainer.querySelector(`[data-tab-id=${id}]`);
-            tab.classList.add ('tab-disabled');
-        }     
-    }
-    get current () {
-        return this._current;
-    }
-    set current (current) {         
-        const tabs = this._tabContainer.children;
-        const panes = this._paneContainer.children;
-        let success = false;
-
-        for (let i = 0; i < tabs.length; ++i) {            
-            const id = tabs[i].getAttribute('data-tab-id');
-            const {opened, closed, enabled} = this._data[id];
-            let tab = tabs[i].querySelector('i');
-            let pane = panes[i];
-            if (id === current) {
-                tab.classList.remove (closed);
-                tab.classList.add (opened);
-                                
-                pane.classList.remove('hidden');
-                pane.classList.add('shown');
-
-                success = true;
-            }
-            else { 
-                tab.classList.remove (opened);
-                tab.classList.add (closed);
-
-                pane.classList.remove('shown');
-                pane.classList.add('hidden');
-            }
-        } 
-        this._current = success ? current : null;
-        let event = document.createEvent('Event');        
-        event.detail = {current: this._current};
-        event.initEvent('change', false, false);
-        this.dispatchEvent(event);        
-    } 
-    addTab({id, icon, opened, closed, tooltip, enabled = true}) { 
+    addTab(id) {
         let tab = document.createElement('div');
-        let ic = document.createElement('i');        
-        icon.split (/\s+/g).forEach (x => ic.classList.add(x));    
-        ic.classList.add (id === this._current ? opened : closed);
-        tab.appendChild (ic);
-        tab.setAttribute ('data-tab-id', id);
-        if (!enabled) {
-            tab.classList.add('tab-disabled');
-        }
-        if (tooltip) {
-            tab.setAttribute ('title', tooltip);
-        }
-        tab.addEventListener ('click', this._toggle.bind(this, id));
-        this._tabContainer.appendChild (tab);
+        tab.classList.add('tab');
+        tab.classList.add('noselect');
+        tab.classList.add('scanex-sidebar-icon');
+        tab.classList.add(id);
+        tab.addEventListener('click', this._onTabClick.bind(this, id));
+        this._tabsContainer.appendChild(tab);
+        this._tabs[id] = tab;
+
+        let panel = document.createElement('div');
+        panel.classList.add('panel');
+        panel.classList.add(id);
+        panel.classList.add('hidden');
+        this._panelsContainer.appendChild(panel);
+        this._panels[id] = panel;
         
-        let pane = document.createElement('div');
-        pane.setAttribute ('data-pane-id', id);
-        pane.classList.add (this.visible && this.current === id ? 'shown' : 'hidden');
-        this._paneContainer.appendChild (pane);
-
-        this._data[id] = {icon, opened, closed, enabled};
-
-        return pane;
-    }
-    removeTab (id) {
-        const tab = this._tabContainer.querySelector(`[data-tab-id=${id}]`);
-        tab.removeEventListener('click', this._toggle.bind(this, id));
-        this._tabContainer.removeChild(tab);
-
-        const pane = this._paneContainer.querySelector(`[data-pane-id=${id}]`);
-        this._paneContainer.removeChild(pane);
-
-        for (let i = 0; i < this._data.length; ++i) {
-            if (this._data[i].id === id) {
-                this._data.splice(i, 1);
-                break;
-            }         
+        if(!this.selected) {
+            this.selected = id;
+            this.visible = false;
         }
-    }    
-    _toggle (current) {
-        if (this.enabled (current)) {
-            this.current = this.current === current ? null : current;
-        }     
+        return panel;
     }
-    getPane (id) {
-        return this._paneContainer.querySelector(`[data-pane-id=${id}]`);
+    removeTab(id) {
+    }
+    get visible () {
+        return this._visible;
+    }
+    set visible (visible) {
+        Object.keys(this._tabs).forEach(id => {
+            if (visible && id === this.selected) {
+                this._panels[id].classList.remove('hidden');
+            }
+            else {
+                this._panels[id].classList.add('hidden');
+            }            
+        });
+        this._visible = visible;
+        let event = document.createEvent('Event');
+        event.initEvent('change:visible', false, false);
+        this.dispatchEvent(event);
+    }
+    get selected () {
+        return this._selected;
+    }
+    set selected (selected) {
+        if (this.selected !== selected) {
+            Object.keys(this._tabs).forEach(id => {
+                if (id === selected) {
+                    this._tabs[id].classList.add('selected');
+                }
+                else {
+                    this._tabs[id].classList.remove('selected');
+                }            
+            }); 
+            this._selected = selected;
+            this.visible = true;
+            let event = document.createEvent('Event');
+            event.initEvent('change:selected', false, false);
+            this.dispatchEvent(event);
+        }
+    }
+    _render(container) {
+        this._element = document.createElement('div');
+        this._element.classList.add('scanex-sidebar');
+
+        this._tabsContainer = document.createElement('div');
+        this._tabsContainer.classList.add('tabs');
+        this._element.appendChild(this._tabsContainer);
+
+        this._panelsContainer = document.createElement('div');
+        this._panelsContainer.classList.add('panels');
+        this._element.appendChild(this._panelsContainer);
+
+        container.appendChild(this._element);
     }
 }
 

@@ -1,40 +1,48 @@
-import babel from 'rollup-plugin-babel';
-import resolve from 'rollup-plugin-node-resolve';
-import commonjs from 'rollup-plugin-commonjs';
-import css from 'rollup-plugin-css-porter';
 import pkg from './package.json';
-import { terser } from 'rollup-plugin-terser';
-
-const production = !process.env.ROLLUP_WATCH;
+import babel from 'rollup-plugin-babel';
+import resolve from '@rollup/plugin-node-resolve';
+import commonjs from '@rollup/plugin-commonjs';
+import json from '@rollup/plugin-json';
+import css from 'rollup-plugin-css-porter';
 
 export default [
-	{
-		input: 'src/Sidebar.js',
-		output: {
-			format: 'cjs',
-			file: pkg.module,
-		},
-		plugins: [							
-			resolve({ jsnext: true, main: true, module: false }),
-			commonjs(),
-			css({minified: false, dest: 'dist/scanex-sidebar.css'}),			
-			babel(),
-		]
-	},
-	{
-		input: 'index.js',
-		output: {
-			sourcemap: true,
-			format: 'iife',
-			name: 'sidebarControl',
-			file: pkg.browser,
-		},
-		plugins: [			
-			resolve({ jsnext: true, main: true, module: false }),
-			commonjs(),
-			css({minified: false, dest: 'public/scanex-sidebar.css'}),
-			babel(),
-			production && terser(),
-		]
-	}
+    {
+        input: 'example/App.js',
+        output: { 
+            file: pkg.browser,
+            format: 'iife',
+            sourcemap: true,
+            name: 'Example'
+        },
+        plugins: [                        
+            json(),
+            resolve(),            
+            commonjs(),
+            css({dest: 'public/main.css', minified: false}),            
+            babel({                
+                extensions: ['.js', '.mjs'],
+                exclude: ['node_modules/@babel/**', 'node_modules/core-js/**'],
+                include: ['example/App.js', 'src/**']
+            }),
+        ],
+    },
+    {
+        input: 'src/Sidebar.js',
+        output: { 
+            file: pkg.main,
+            format: 'cjs',
+            sourcemap: true
+        },
+        plugins: [        
+	        json(),
+            resolve(),
+            commonjs(),
+            css({dest: 'dist/scanex-sidebar.css', minified: false}),
+            babel({                
+                extensions: ['.js', '.mjs'],
+                exclude: ['node_modules/@babel/**', 'node_modules/core-js/**'],
+                include: ['src/**']
+            }),
+        ],
+    },   
 ];

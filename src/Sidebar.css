@@ -6,22 +6,17 @@
     -ms-user-select: none;
     user-select: none;
 }
-.scanex-sidebar {
-    display: flex;
+.scanex-sidebar > * {
+    float: left;
     vertical-align: top;    
 }
-.scanex-sidebar .tabs,
-.scanex-sidebar .panes {        
-    vertical-align: top;
-    display: inline-block;    
-}    
-.scanex-sidebar .tabs div {
-    text-align: center;
-    cursor: pointer;       
+.scanex-sidebar > .tabs > *,
+.scanex-sidebar > .panels > * {
+    display: block;
 }
-.scanex-sidebar .shown {
-	display: block;
+.scanex-sidebar > .panels {
+    overflow-y: scroll;
 }
-.scanex-sidebar .hidden {
-	display: none;
+.scanex-sidebar > .panels > .hidden {
+    display: none;
 }
