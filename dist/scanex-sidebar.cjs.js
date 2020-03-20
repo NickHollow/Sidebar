@@ -10161,7 +10161,6 @@ var Sidebar = /*#__PURE__*/function (_EventTarget) {
       this._tabs[id] = tab;
       var panel = document.createElement('div');
       panel.classList.add('panel');
-      panel.classList.add(id);
       panel.classList.add('hidden');
 
       this._panelsContainer.appendChild(panel);
