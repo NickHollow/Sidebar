@@ -4,38 +4,23 @@ Sidebar
 
 # Конструктор
 ```javascript
-new Sidebar (container, options);
+new Sidebar (container);
 ```
 Параметр | Тип | Описание
 ---------|-----|---------
 container |`<HtmlElement>`| Контейнер для боковой панели
-options |`<SidebarOptions>`| Параметры инициализации боковой панели
-
-### `<SidebarOptions>`
-Свойство | Тип | По умолчанию | Возможные значения | Описание
----------|-----|-----------------------|--------------------|---------
-position | `<String>` | left | left \| right | Положение элемента управления.
 
 # Свойства
 Свойство | Тип | Чтение | Запись | Описание
 ---------|-----|--------|--------|---------
-current | `<String>` | Да | Да | Идентификатор открытой вкладки.<br/>Установка открывает вкладку с указанным идентификатором.<br/>Если присвоить значение `null`, вкладка закрывается.
+selected | `<String>` | Да | Да | Идентификатор открытой вкладки.<br/>Установка открывает вкладку с указанным идентификатором.<br/>Если присвоить значение `null`, вкладка закрывается.
+visible | `<Boolean>` | Да | Да | Видимость выбранной вкладки.
 
 # Методы
-## addTab (options) - Добавляет новую вкладку
+## addTab (id) - Добавляет новую вкладку
 Параметр | Тип | Описание
 ---------|-----|---------
-options |`<TabOptions>`| Параметры создаваемой вкладки
-
-### `<TabOptions>`
-Свойство | Тип | Описание
----------|-----|---------
-id | `<String>` | Уникальный идентификатор вкладки.
-icon | `<String>` | CSS-класс иконки вкладки.
-opened | `<String>` | CSS-класс иконки открытой вкладки.
-closed | `<String>` | CSS-класс иконки закрытой вкладки.
-enabled | `<Boolean>` | Вкладка активна.
-tooltip | `<String>` | Всплывающий текст описания вкладки.
+id |`<String>`| Идентификатор создаваемой вкладки
 
 ### Возвращаемое значение:
 Тип | Описание
@@ -70,23 +55,14 @@ id |`<String>`| Идентификатор вкладки
 # События
 Событие | Тип | Описание
 --------|-----|---------
-change | `<Event>` | Изменение состояния вкладок (открытие / закрытие).
-
-### `<Event>`
-Свойство | Тип | Описание
----------|-----|---------
-detail | `<SidebarСhangeEvent>` | Параметры события
-
-### `<SidebarСhangeEvent>`
-Свойство | Тип | Описание
----------|-----|---------
-current | `<String>` | Идентификатор открытой вкладки
+change:visible | `<Event>` | Изменение видимости вкладки.
+change:selected | `<Event>` | Изменение выбранной вкладки.
 
 # Пример:
 ```javascript
-let sidebar = new Sidebar (document.getElementById('sidebar'), {position: 'left'});
-sidebar.addTab({id: 'terra', icon: 'icon terra', opened: 'opened', closed: 'closed'}).innerHTML = <span>Terra</span>;
-sidebar.addTab({id: 'aqua', icon: 'icon aqua', opened: 'opened', closed: 'closed'}).innerHTML = <span>Aqua</span>;
-sidebar.addTab({id: 'aura', icon: 'icon aura', opened: 'opened', closed: 'closed'}).innerHTML = <span>Aura</span>;
-sidebar.on ('change', e => console.log(e));
+let sidebar = new Sidebar (document.getElementById('sidebar'));
+sidebar.addTab('terra').innerHTML = <span>Terra</span>;
+sidebar.addTab('aqua').innerHTML = <span>Aqua</span>;
+sidebar.addTab('aura').innerHTML = <span>Aura</span>;
+sidebar.on ('change:selected', e => console.log(e));
 ```
