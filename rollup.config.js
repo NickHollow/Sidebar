@@ -29,19 +29,19 @@ export default [
     {
         input: 'src/Sidebar.js',
         output: { 
-            file: pkg.main,
+            file: pkg.module,
             format: 'cjs',
             sourcemap: true
         },
         plugins: [        
-	        json(),
+            json(),
             resolve(),
             commonjs(),
             css({dest: 'dist/scanex-sidebar.css', minified: false}),
             babel({                
                 extensions: ['.js', '.mjs'],
                 exclude: ['node_modules/@babel/**', 'node_modules/core-js/**'],
-                include: ['src/**']
+                include: ['index.js', 'src/**']
             }),
         ],
     },   
