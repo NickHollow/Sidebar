@@ -1737,7 +1737,7 @@
 
 	    _this._render(_this._container);
 
-	    _this.visible = false;
+	    _this._visible = false;
 	    return _this;
 	  }
 
@@ -1746,13 +1746,10 @@
 	    value: function _onTabClick(id, e) {
 	      e.stopPropagation();
 
-	      if (this.enabled(id)) {
-	        if (this.selected === id) {
-	          this.visible = !this.visible;
-	        } else {
-	          this.selected = id;
-	          this.visible = true;
-	        }
+	      if (this.selected === id) {
+	        this.visible = !this.visible;
+	      } else {
+	        this.selected = id;
 	      }
 	    }
 	  }, {
@@ -1760,10 +1757,6 @@
 	    value: function disable(id) {
 	      if (this.tabs[id]) {
 	        this.tabs[id].setAttribute('disabled', 'disabled');
-
-	        if (id === this.selected) {
-	          this.visible = false;
-	        }
 	      }
 	    }
 	  }, {
@@ -1857,26 +1850,14 @@
 	      return this._visible;
 	    },
 	    set: function set(visible) {
-	      var _this2 = this;
-
-	      var ok = false;
-	      Object.keys(this._tabs).forEach(function (id) {
-	        if (_this2.enabled(id)) {
-	          if (visible && id === _this2.selected) {
-	            _this2._panels[id].classList.remove('hidden');
-
-	            _this2._visible = true;
-	          } else {
-	            _this2._visible = false;
-
-	            _this2._panels[id].classList.add('hidden');
-	          }
-
-	          ok = true;
+	      if (this.selected) {
+	        if (visible) {
+	          this._panels[this.selected].classList.remove('hidden');
+	        } else {
+	          this._panels[this.selected].classList.add('hidden');
 	        }
-	      });
 
-	      if (ok) {
+	        this._visible = visible;
 	        var event = document.createEvent('Event');
 	        event.initEvent('change:visible', false, false);
 	        this.dispatchEvent(event);
@@ -1888,21 +1869,22 @@
 	      return this._selected;
 	    },
 	    set: function set(selected) {
-	      var _this3 = this;
+	      var _this2 = this;
 
 	      if (this.selected !== selected && this.enabled(selected)) {
 	        Object.keys(this._tabs).forEach(function (id) {
 	          if (id === selected) {
-	            _this3._tabs[id].classList.add('selected');
+	            _this2._tabs[id].classList.add('selected');
 
-	            _this3._selected = selected;
+	            _this2._selected = selected;
 	          } else {
-	            _this3._tabs[id].classList.remove('selected');
+	            _this2._tabs[id].classList.remove('selected');
 	          }
 	        });
 	        var event = document.createEvent('Event');
 	        event.initEvent('change:selected', false, false);
 	        this.dispatchEvent(event);
+	        this.visible = true;
 	      }
 	    }
 	  }]);
@@ -15992,11 +15974,6 @@
 
 	window.addEventListener('load', function () {
 	  var sidebar = new Sidebar(document.getElementById('example'));
-	  var propsPanel = sidebar.addTab('props');
-	  propsPanel.innerText = 'Props';
-	  var layersPanel = sidebar.addTab('layers');
-	  layersPanel.innerText = 'Layers';
-	  sidebar.disable('layers');
 	  var mapContainer = document.getElementById('map');
 	  var map = leafletSrc.map(mapContainer).setView([51.505, -0.09], 13);
 	  sidebar.on('change:visible', function () {
@@ -16006,6 +15983,11 @@
 	      mapContainer.classList.remove('expanded');
 	    }
 	  });
+	  var propsPanel = sidebar.addTab('props');
+	  propsPanel.innerText = 'Props';
+	  var layersPanel = sidebar.addTab('layers');
+	  layersPanel.innerText = 'Layers';
+	  sidebar.disable('layers');
 	  leafletSrc.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
 	    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
 	  }).addTo(map);

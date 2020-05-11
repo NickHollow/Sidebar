@@ -8,26 +8,20 @@ class Sidebar extends EventTarget {
         this._panels = {};
         this._container = container;
         this._render(this._container);
-        this.visible = false;
+        this._visible = false;
     }
     _onTabClick(id, e) {
         e.stopPropagation();
-        if (this.enabled(id)) {
-            if (this.selected === id) {
-                this.visible = !this.visible;
-            }
-            else {
-                this.selected = id;
-                this.visible = true;
-            }
-        }    
+        if (this.selected === id) {
+            this.visible = !this.visible;
+        }
+        else {
+            this.selected = id;            
+        }
     }
     disable(id) {
         if (this.tabs[id]) {
-            this.tabs[id].setAttribute('disabled', 'disabled');
-            if (id === this.selected) {
-                this.visible = false;
-            }
+            this.tabs[id].setAttribute('disabled', 'disabled');            
         }        
     }
     enable(id) {
@@ -62,7 +56,7 @@ class Sidebar extends EventTarget {
         this._panels[id] = panel;
         
         if(!this.selected) {
-            this.selected = id;            
+            this.selected = id;
         }
         return panel;
     }
@@ -81,47 +75,41 @@ class Sidebar extends EventTarget {
             }
         }        
     }
-    get visible () {
+    get visible() {
         return this._visible;
     }
-    set visible (visible) {
-        let ok = false;
-        Object.keys(this._tabs).forEach(id => {
-            if (this.enabled(id)) {
-                if (visible && id === this.selected) {                
-                    this._panels[id].classList.remove('hidden');
-                    this._visible = true;                
-                }
-                else {
-                    this._visible = false;                
-                    this._panels[id].classList.add('hidden');
-                }
-                ok = true;
-            }            
-        });
-        if (ok) {
+    set visible(visible) {
+        if (this.selected) {
+            if (visible) {
+                this._panels[this.selected].classList.remove('hidden');
+            }
+            else {
+                this._panels[this.selected].classList.add('hidden');
+            }
+            this._visible = visible;
             let event = document.createEvent('Event');
             event.initEvent('change:visible', false, false);
             this.dispatchEvent(event);
-        }        
+        }            
     }
     get selected () {
         return this._selected;
     }
     set selected (selected) {
-        if (this.selected !== selected && this.enabled(selected)) {
+        if (this.selected !== selected && this.enabled(selected)) {            
             Object.keys(this._tabs).forEach(id => {
                 if (id === selected) {
                     this._tabs[id].classList.add('selected');
                     this._selected = selected;
                 }
                 else {
-                    this._tabs[id].classList.remove('selected');
+                    this._tabs[id].classList.remove('selected');                    
                 }
-            });          
+            });
             let event = document.createEvent('Event');
             event.initEvent('change:selected', false, false);
             this.dispatchEvent(event);
+            this.visible = true;
         }
     }
     _render(container) {
