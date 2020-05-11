@@ -14,6 +14,8 @@ window.addEventListener('load', () => {
     let layersPanel = sidebar.addTab('layers');
     layersPanel.innerText = 'Layers';
 
+    sidebar.disable('layers');
+
     let mapContainer = document.getElementById('map');
 
     let map = L.map(mapContainer).setView([51.505, -0.09], 13);

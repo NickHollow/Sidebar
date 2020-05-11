@@ -12,17 +12,22 @@ class Sidebar extends EventTarget {
     }
     _onTabClick(id, e) {
         e.stopPropagation();
-        if (this.selected === id) {
-            this.visible = !this.visible;
-        }
-        else {
-            this.selected = id;
-            this.visible = true;
-        }     
+        if (this.enabled(id)) {
+            if (this.selected === id) {
+                this.visible = !this.visible;
+            }
+            else {
+                this.selected = id;
+                this.visible = true;
+            }
+        }    
     }
     disable(id) {
         if (this.tabs[id]) {
             this.tabs[id].setAttribute('disabled', 'disabled');
+            if (id === this.selected) {
+                this.visible = false;
+            }
         }        
     }
     enable(id) {
@@ -83,17 +88,18 @@ class Sidebar extends EventTarget {
         let ok = false;
         Object.keys(this._tabs).forEach(id => {
             if (this.enabled(id)) {
-                if (visible && id === this.selected) {
-                    this._panels[id].classList.remove('hidden');                    
+                if (visible && id === this.selected) {                
+                    this._panels[id].classList.remove('hidden');
+                    this._visible = true;                
                 }
                 else {
+                    this._visible = false;                
                     this._panels[id].classList.add('hidden');
                 }
                 ok = true;
-            }
-        });        
+            }            
+        });
         if (ok) {
-            this._visible = visible;
             let event = document.createEvent('Event');
             event.initEvent('change:visible', false, false);
             this.dispatchEvent(event);
@@ -103,25 +109,19 @@ class Sidebar extends EventTarget {
         return this._selected;
     }
     set selected (selected) {
-        if (this.selected !== selected) {
-            let ok = false;
+        if (this.selected !== selected && this.enabled(selected)) {
             Object.keys(this._tabs).forEach(id => {
-                if(this.enabled(id)) {
-                    if (id === selected) {
-                        this._tabs[id].classList.add('selected');                        
-                    }
-                    else {
-                        this._tabs[id].classList.remove('selected');
-                    }
-                    ok = true;
+                if (id === selected) {
+                    this._tabs[id].classList.add('selected');
+                    this._selected = selected;
                 }
-            });
-            if(ok) {
-                this._selected = selected;            
-                let event = document.createEvent('Event');
-                event.initEvent('change:selected', false, false);
-                this.dispatchEvent(event);
-            }            
+                else {
+                    this._tabs[id].classList.remove('selected');
+                }
+            });          
+            let event = document.createEvent('Event');
+            event.initEvent('change:selected', false, false);
+            this.dispatchEvent(event);
         }
     }
     _render(container) {

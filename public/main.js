@@ -1746,11 +1746,13 @@
 	    value: function _onTabClick(id, e) {
 	      e.stopPropagation();
 
-	      if (this.selected === id) {
-	        this.visible = !this.visible;
-	      } else {
-	        this.selected = id;
-	        this.visible = true;
+	      if (this.enabled(id)) {
+	        if (this.selected === id) {
+	          this.visible = !this.visible;
+	        } else {
+	          this.selected = id;
+	          this.visible = true;
+	        }
 	      }
 	    }
 	  }, {
@@ -1758,6 +1760,10 @@
 	    value: function disable(id) {
 	      if (this.tabs[id]) {
 	        this.tabs[id].setAttribute('disabled', 'disabled');
+
+	        if (id === this.selected) {
+	          this.visible = false;
+	        }
 	      }
 	    }
 	  }, {
@@ -1858,7 +1864,11 @@
 	        if (_this2.enabled(id)) {
 	          if (visible && id === _this2.selected) {
 	            _this2._panels[id].classList.remove('hidden');
+
+	            _this2._visible = true;
 	          } else {
+	            _this2._visible = false;
+
 	            _this2._panels[id].classList.add('hidden');
 	          }
 
@@ -1867,7 +1877,6 @@
 	      });
 
 	      if (ok) {
-	        this._visible = visible;
 	        var event = document.createEvent('Event');
 	        event.initEvent('change:visible', false, false);
 	        this.dispatchEvent(event);
@@ -1881,26 +1890,19 @@
 	    set: function set(selected) {
 	      var _this3 = this;
 
-	      if (this.selected !== selected) {
-	        var ok = false;
+	      if (this.selected !== selected && this.enabled(selected)) {
 	        Object.keys(this._tabs).forEach(function (id) {
-	          if (_this3.enabled(id)) {
-	            if (id === selected) {
-	              _this3._tabs[id].classList.add('selected');
-	            } else {
-	              _this3._tabs[id].classList.remove('selected');
-	            }
+	          if (id === selected) {
+	            _this3._tabs[id].classList.add('selected');
 
-	            ok = true;
+	            _this3._selected = selected;
+	          } else {
+	            _this3._tabs[id].classList.remove('selected');
 	          }
 	        });
-
-	        if (ok) {
-	          this._selected = selected;
-	          var event = document.createEvent('Event');
-	          event.initEvent('change:selected', false, false);
-	          this.dispatchEvent(event);
-	        }
+	        var event = document.createEvent('Event');
+	        event.initEvent('change:selected', false, false);
+	        this.dispatchEvent(event);
 	      }
 	    }
 	  }]);
@@ -15994,6 +15996,7 @@
 	  propsPanel.innerText = 'Props';
 	  var layersPanel = sidebar.addTab('layers');
 	  layersPanel.innerText = 'Layers';
+	  sidebar.disable('layers');
 	  var mapContainer = document.getElementById('map');
 	  var map = leafletSrc.map(mapContainer).setView([51.505, -0.09], 13);
 	  sidebar.on('change:visible', function () {
