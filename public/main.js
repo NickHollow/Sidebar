@@ -1816,6 +1816,16 @@
 	      container.appendChild(this._panelsContainer);
 	    }
 	  }, {
+	    key: "tabs",
+	    get: function get() {
+	      return this._tabs;
+	    }
+	  }, {
+	    key: "panels",
+	    get: function get() {
+	      return this._panels;
+	    }
+	  }, {
 	    key: "visible",
 	    get: function get() {
 	      return this._visible;

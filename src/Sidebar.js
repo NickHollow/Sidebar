@@ -20,6 +20,12 @@ class Sidebar extends EventTarget {
             this.visible = true;
         }     
     }
+    get tabs() {
+        return this._tabs;
+    }
+    get panels() {
+        return this._panels;
+    }
     addTab(id) {
         let tab = document.createElement('div');
         tab.classList.add('tab');
