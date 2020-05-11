@@ -20,6 +20,19 @@ class Sidebar extends EventTarget {
             this.visible = true;
         }     
     }
+    disable(id) {
+        if (this.tabs[id]) {
+            this.tabs[id].setAttribute('disabled', 'disabled');
+        }        
+    }
+    enable(id) {
+        if (this.tabs[id]) {
+            this.tabs[id].removeAttribute('disabled');
+        }
+    }
+    enabled(id) {        
+        return this.tabs[id] && !this.tabs[id].hasAttribute('disabled');
+    }
     get tabs() {
         return this._tabs;
     }
@@ -66,36 +79,44 @@ class Sidebar extends EventTarget {
         return this._visible;
     }
     set visible (visible) {
+        let ok = false;
         Object.keys(this._tabs).forEach(id => {
-            if (visible && id === this.selected) {
+            if (visible && id === this.selected && this.enabled(id)) {
                 this._panels[id].classList.remove('hidden');
+                ok = true;
             }
             else {
                 this._panels[id].classList.add('hidden');
             }            
         });
-        this._visible = visible;
-        let event = document.createEvent('Event');
-        event.initEvent('change:visible', false, false);
-        this.dispatchEvent(event);
+        if (ok) {
+            this._visible = visible;
+            let event = document.createEvent('Event');
+            event.initEvent('change:visible', false, false);
+            this.dispatchEvent(event);
+        }        
     }
     get selected () {
         return this._selected;
     }
     set selected (selected) {
         if (this.selected !== selected) {
+            let ok = false;
             Object.keys(this._tabs).forEach(id => {
-                if (id === selected) {
+                if (id === selected && this.enabled(id)) {
                     this._tabs[id].classList.add('selected');
+                    ok = true;
                 }
                 else {
                     this._tabs[id].classList.remove('selected');
                 }            
             }); 
-            this._selected = selected;            
-            let event = document.createEvent('Event');
-            event.initEvent('change:selected', false, false);
-            this.dispatchEvent(event);
+            if(ok) {
+                this._selected = selected;            
+                let event = document.createEvent('Event');
+                event.initEvent('change:selected', false, false);
+                this.dispatchEvent(event);
+            }            
         }
     }
     _render(container) {

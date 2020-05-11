@@ -1754,6 +1754,25 @@
 	      }
 	    }
 	  }, {
+	    key: "disable",
+	    value: function disable(id) {
+	      if (this.tabs[id]) {
+	        this.tabs[id].setAttribute('disabled', 'disabled');
+	      }
+	    }
+	  }, {
+	    key: "enable",
+	    value: function enable(id) {
+	      if (this.tabs[id]) {
+	        this.tabs[id].removeAttribute('disabled');
+	      }
+	    }
+	  }, {
+	    key: "enabled",
+	    value: function enabled(id) {
+	      return this.tabs[id] && !this.tabs[id].hasAttribute('disabled');
+	    }
+	  }, {
 	    key: "addTab",
 	    value: function addTab(id) {
 	      var tab = document.createElement('div');
@@ -1833,17 +1852,23 @@
 	    set: function set(visible) {
 	      var _this2 = this;
 
+	      var ok = false;
 	      Object.keys(this._tabs).forEach(function (id) {
-	        if (visible && id === _this2.selected) {
+	        if (visible && id === _this2.selected && _this2.enabled(id)) {
 	          _this2._panels[id].classList.remove('hidden');
+
+	          ok = true;
 	        } else {
 	          _this2._panels[id].classList.add('hidden');
 	        }
 	      });
-	      this._visible = visible;
-	      var event = document.createEvent('Event');
-	      event.initEvent('change:visible', false, false);
-	      this.dispatchEvent(event);
+
+	      if (ok) {
+	        this._visible = visible;
+	        var event = document.createEvent('Event');
+	        event.initEvent('change:visible', false, false);
+	        this.dispatchEvent(event);
+	      }
 	    }
 	  }, {
 	    key: "selected",
@@ -1854,17 +1879,23 @@
 	      var _this3 = this;
 
 	      if (this.selected !== selected) {
+	        var ok = false;
 	        Object.keys(this._tabs).forEach(function (id) {
-	          if (id === selected) {
+	          if (id === selected && _this3.enabled(id)) {
 	            _this3._tabs[id].classList.add('selected');
+
+	            ok = true;
 	          } else {
 	            _this3._tabs[id].classList.remove('selected');
 	          }
 	        });
-	        this._selected = selected;
-	        var event = document.createEvent('Event');
-	        event.initEvent('change:selected', false, false);
-	        this.dispatchEvent(event);
+
+	        if (ok) {
+	          this._selected = selected;
+	          var event = document.createEvent('Event');
+	          event.initEvent('change:selected', false, false);
+	          this.dispatchEvent(event);
+	        }
 	      }
 	    }
 	  }]);
