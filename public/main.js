@@ -1855,12 +1855,14 @@
 
 	      var ok = false;
 	      Object.keys(this._tabs).forEach(function (id) {
-	        if (visible && id === _this2.selected && _this2.enabled(id)) {
-	          _this2._panels[id].classList.remove('hidden');
+	        if (_this2.enabled(id)) {
+	          if (visible && id === _this2.selected) {
+	            _this2._panels[id].classList.remove('hidden');
 
-	          ok = true;
-	        } else {
-	          _this2._panels[id].classList.add('hidden');
+	            ok = true;
+	          } else {
+	            _this2._panels[id].classList.add('hidden');
+	          }
 	        }
 	      });
 
@@ -1882,12 +1884,14 @@
 	      if (this.selected !== selected) {
 	        var ok = false;
 	        Object.keys(this._tabs).forEach(function (id) {
-	          if (id === selected && _this3.enabled(id)) {
-	            _this3._tabs[id].classList.add('selected');
+	          if (_this3.enabled(id)) {
+	            if (id === selected) {
+	              _this3._tabs[id].classList.add('selected');
 
-	            ok = true;
-	          } else {
-	            _this3._tabs[id].classList.remove('selected');
+	              ok = true;
+	            } else {
+	              _this3._tabs[id].classList.remove('selected');
+	            }
 	          }
 	        });
 

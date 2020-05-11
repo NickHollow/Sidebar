@@ -82,14 +82,16 @@ class Sidebar extends EventTarget {
     set visible (visible) {
         let ok = false;
         Object.keys(this._tabs).forEach(id => {
-            if (visible && id === this.selected && this.enabled(id)) {
-                this._panels[id].classList.remove('hidden');
-                ok = true;
+            if (this.enabled(id)) {
+                if (visible && id === this.selected) {
+                    this._panels[id].classList.remove('hidden');
+                    ok = true;                    
+                }
+                else {
+                    this._panels[id].classList.add('hidden');
+                }                
             }
-            else {
-                this._panels[id].classList.add('hidden');
-            }            
-        });
+        });        
         if (ok) {
             this._visible = visible;
             let event = document.createEvent('Event');
@@ -104,14 +106,16 @@ class Sidebar extends EventTarget {
         if (this.selected !== selected) {
             let ok = false;
             Object.keys(this._tabs).forEach(id => {
-                if (id === selected && this.enabled(id)) {
-                    this._tabs[id].classList.add('selected');
-                    ok = true;
-                }
-                else {
-                    this._tabs[id].classList.remove('selected');
-                }            
-            }); 
+                if(this.enabled(id)) {
+                    if (id === selected) {
+                        this._tabs[id].classList.add('selected');
+                        ok = true;
+                    }
+                    else {
+                        this._tabs[id].classList.remove('selected');
+                    }
+                }             
+            });
             if(ok) {
                 this._selected = selected;            
                 let event = document.createEvent('Event');
