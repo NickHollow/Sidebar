@@ -1796,18 +1796,19 @@ var Sidebar = /*#__PURE__*/function (_EventTarget) {
       return this._visible;
     },
     set: function set(visible) {
-      if (this.selected) {
-        if (visible) {
-          this._panels[this.selected].classList.remove('hidden');
-        } else {
-          this._panels[this.selected].classList.add('hidden');
-        }
+      var _this2 = this;
 
-        this._visible = visible;
-        var event = document.createEvent('Event');
-        event.initEvent('change:visible', false, false);
-        this.dispatchEvent(event);
-      }
+      Object.keys(this._tabs).forEach(function (id) {
+        if (visible && id === _this2.selected) {
+          _this2._panels[id].classList.remove('hidden');
+        } else {
+          _this2._panels[id].classList.add('hidden');
+        }
+      });
+      this._visible = visible;
+      var event = document.createEvent('Event');
+      event.initEvent('change:visible', false, false);
+      this.dispatchEvent(event);
     }
   }, {
     key: "selected",
@@ -1815,16 +1816,16 @@ var Sidebar = /*#__PURE__*/function (_EventTarget) {
       return this._selected;
     },
     set: function set(selected) {
-      var _this2 = this;
+      var _this3 = this;
 
       if (this.selected !== selected && this.enabled(selected)) {
         Object.keys(this._tabs).forEach(function (id) {
           if (id === selected) {
-            _this2._tabs[id].classList.add('selected');
+            _this3._tabs[id].classList.add('selected');
 
-            _this2._selected = selected;
+            _this3._selected = selected;
           } else {
-            _this2._tabs[id].classList.remove('selected');
+            _this3._tabs[id].classList.remove('selected');
           }
         });
         var event = document.createEvent('Event');

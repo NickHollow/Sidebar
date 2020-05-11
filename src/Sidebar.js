@@ -79,18 +79,18 @@ class Sidebar extends EventTarget {
         return this._visible;
     }
     set visible(visible) {
-        if (this.selected) {
-            if (visible) {
-                this._panels[this.selected].classList.remove('hidden');
+        Object.keys(this._tabs).forEach(id => {
+            if (visible && id === this.selected) {
+                this._panels[id].classList.remove('hidden');                
             }
             else {
-                this._panels[this.selected].classList.add('hidden');
+                this._panels[id].classList.add('hidden');
             }
-            this._visible = visible;
-            let event = document.createEvent('Event');
-            event.initEvent('change:visible', false, false);
-            this.dispatchEvent(event);
-        }            
+        });            
+        this._visible = visible;
+        let event = document.createEvent('Event');
+        event.initEvent('change:visible', false, false);
+        this.dispatchEvent(event);        
     }
     get selected () {
         return this._selected;
