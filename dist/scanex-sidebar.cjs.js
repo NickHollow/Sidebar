@@ -1734,6 +1734,7 @@ var Sidebar = /*#__PURE__*/function (_EventTarget) {
       var panel = document.createElement('div');
       panel.classList.add('panel');
       panel.classList.add('hidden');
+      panel.classList.add(id);
 
       this._panelsContainer.appendChild(panel);
 

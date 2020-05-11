@@ -52,6 +52,7 @@ class Sidebar extends EventTarget {
         let panel = document.createElement('div');
         panel.classList.add('panel');        
         panel.classList.add('hidden');
+        panel.classList.add(id);
         this._panelsContainer.appendChild(panel);
         this._panels[id] = panel;
         
