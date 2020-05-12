@@ -15970,7 +15970,7 @@
 	window.L = exports;
 
 	})));
-	//# sourceMappingURL=leaflet-src.js.map
+
 	});
 
 	window.addEventListener('load', function () {
