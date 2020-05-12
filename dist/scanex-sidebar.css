@@ -17,6 +17,6 @@
 .scanex-sidebar > .panels {
     overflow-y: scroll;
 }
-.scanex-sidebar > .panels > .hidden {
+.scanex-sidebar > .panels > .panel.hidden {
     display: none;
 }
