@@ -96,7 +96,13 @@ class Sidebar extends EventTarget {
         return this._selected;
     }
     set selected (selected) {
-        if (this.selected !== selected && this.enabled(selected)) {            
+        if (this.selected === selected) {            
+            this.visible = true;
+            let event = document.createEvent('Event');
+            event.initEvent('change:selected', false, false);
+            this.dispatchEvent(event);
+        }
+        else if (this.enabled(selected)) {
             Object.keys(this._tabs).forEach(id => {
                 if (id === selected) {
                     this._tabs[id].classList.add('selected');

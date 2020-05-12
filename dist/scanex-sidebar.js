@@ -1818,7 +1818,12 @@ var Sidebar = /*#__PURE__*/function (_EventTarget) {
     set: function set(selected) {
       var _this3 = this;
 
-      if (this.selected !== selected && this.enabled(selected)) {
+      if (this.selected === selected) {
+        this.visible = true;
+        var event = document.createEvent('Event');
+        event.initEvent('change:selected', false, false);
+        this.dispatchEvent(event);
+      } else if (this.enabled(selected)) {
         Object.keys(this._tabs).forEach(function (id) {
           if (id === selected) {
             _this3._tabs[id].classList.add('selected');
@@ -1829,9 +1834,12 @@ var Sidebar = /*#__PURE__*/function (_EventTarget) {
           }
         });
         this.visible = true;
-        var event = document.createEvent('Event');
-        event.initEvent('change:selected', false, false);
-        this.dispatchEvent(event);
+
+        var _event = document.createEvent('Event');
+
+        _event.initEvent('change:selected', false, false);
+
+        this.dispatchEvent(_event);
       }
     }
   }]);
