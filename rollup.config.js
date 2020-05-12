@@ -10,7 +10,10 @@ export default [
             file: 'public/main.js',
             format: 'iife',
             sourcemap: true,
-            name: 'Example'
+            name: 'Example',
+            globals: {
+                leaflet: 'L',
+            },
         },
         plugins: [                        
             resolve(),            

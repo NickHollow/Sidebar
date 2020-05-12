@@ -9,10 +9,10 @@ html, body {
     height: 100vh;
 }
 #map {
-    width: calc(100% - 55px);
+    width: calc(100% - 65px);
 }
 #map.expanded {
-    width: calc(100% - 202px);
+    width: calc(100% - 215px);
 }
 .scanex-sidebar > .tabs {
     background-color: #4C5567;

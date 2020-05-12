@@ -1,9 +1,9 @@
 import './App.css';
-import './scroll.css';
+// import './scroll.css';
 import './icons.css';
 import Sidebar from '../src/Sidebar.js';
-import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
+import L from 'leaflet';
 
 window.addEventListener('load', () => {
     let sidebar = new Sidebar(document.getElementById('example'));
