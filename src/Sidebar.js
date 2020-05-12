@@ -105,11 +105,11 @@ class Sidebar extends EventTarget {
                 else {
                     this._tabs[id].classList.remove('selected');                    
                 }
-            });
+            });            
+            this.visible = true;
             let event = document.createEvent('Event');
             event.initEvent('change:selected', false, false);
             this.dispatchEvent(event);
-            this.visible = true;
         }
     }
     _render(container) {

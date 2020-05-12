@@ -1828,10 +1828,10 @@ var Sidebar = /*#__PURE__*/function (_EventTarget) {
             _this3._tabs[id].classList.remove('selected');
           }
         });
+        this.visible = true;
         var event = document.createEvent('Event');
         event.initEvent('change:selected', false, false);
         this.dispatchEvent(event);
-        this.visible = true;
       }
     }
   }]);
