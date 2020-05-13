@@ -1,7 +1,7 @@
 {
   "name": "scanex-sidebar",
   "version": "2.0.0",
-  "main": "src/Sidebar.js",
+  "main": "dist/scanex-sidebar.js",
   "scripts": {
     "build": "npm run svg & rollup -c",
     "svg": "node build-svg.js",
