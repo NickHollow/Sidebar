@@ -1,5 +1,5 @@
 import './Sidebar.css';
-import EventTarget from 'scanex-event-target';
+import EventTarget from '@scanex/event-target';
 
 class Sidebar extends EventTarget {
     constructor(container) {
