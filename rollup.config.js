@@ -17,7 +17,7 @@ export default [
             },
         },
         plugins: [                        
-            resolve(),            
+            resolve({ dedupe: ['core-js'] }),
             commonjs(),
             css({dest: 'public/main.css', minified: false}),            
             babel({                
@@ -28,14 +28,14 @@ export default [
         ],
     },
     {
-        input: 'src/Sidebar.js',
+        input: pkg.module,
         output: { 
             file: pkg.main,
             format: 'cjs',
-            sourcemap: true
+            sourcemap: true,
         },
-        plugins: [        
-            resolve(),
+        plugins: [
+            resolve({ dedupe: ['core-js'] }),
             commonjs(),
             css({dest: 'dist/scanex-sidebar.css', minified: false}),
             babel({                
